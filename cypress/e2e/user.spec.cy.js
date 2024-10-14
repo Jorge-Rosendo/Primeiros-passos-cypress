@@ -1,15 +1,18 @@
 import { first } from "lodash"
 import userData from "../fixtures/users/userData.json"
+import LoginPage from "../pages/loginPage"
+import DashboadPage from "../pages/dashboardPage"
+
+const loginPage = new LoginPage()
+const dashboardPage = new DashboadPage()
 
 describe('Orange HRM Tests', () => {
   
   const selectorsList = {
-     usernameField: "[name='username']",
-     passwordField: "[name='password']",
-     loginButton: "[type='submit']",
+
      sectionTitleTopBar: ".oxd-topbar-header-breadcrumb-module",
-     dashboardGrid: ".orangehrm-dashboard-grid",
-     wrongCredentialAlert: "[role='alert']",
+     
+
      myInfoButton: "[href='/web/index.php/pim/viewMyDetails']",
      firstNameField: "[name='firstName']",
      middleNameField: "[name='middleName']",
@@ -20,31 +23,28 @@ describe('Orange HRM Tests', () => {
      dateCloseButton: ".--close",
      saveButton: "[type='submit']",
      successConfirmCloseButton: ".oxd-toast-close",
-     successConfirmButton: ".oxd-toast-icon-wrap > .oxd-icon"
+     successConfirmButton: ".oxd-toast-icon-wrap > .oxd-icon",
+     selectArrow: ".oxd-select-text--arrow",
+     nationalitySelect: ":nth-child(27) > span",
+     matiralSelect: ".oxd-select-dropdown > :nth-child(3)"
   }
 
   it('Successfull Login', () => {
-    cy.visit('/auth/login')
-    cy.get(selectorsList.usernameField).type(userData.userSeccess.username)
-    cy.get(selectorsList.passwordField).type(userData.userSeccess.password)
-    cy.get(selectorsList.loginButton).click()
-    cy.location('pathname').should('equal', '/web/index.php/dashboard/index')
-    cy.get(selectorsList.dashboardGrid)
+    loginPage.accessLoginPage()
+    loginPage.loginWithUser(userData.userSeccess.username, userData.userSeccess.password)
+    dashboardPage.checkLocation()
   })
+
   it('Failed Login', () => {
-    cy.visit('/auth/login')
-    cy.get(selectorsList.usernameField).type(userData.userFail.username)
-    cy.get(selectorsList.passwordField).type(userData.userFail.password)
-    cy.get(selectorsList.loginButton).click()
-    cy.get(selectorsList.wrongCredentialAlert)
+    loginPage.accessLoginPage()
+    loginPage.loginWithUser(userData.userFail.username, userData.userFail.password)
+    loginPage.wrongCredentialsFailLogin()
   })
+
   it('Successfull User Info Update', () => {
-    cy.visit('/auth/login')
-    cy.get(selectorsList.usernameField).type(userData.userSeccess.username)
-    cy.get(selectorsList.passwordField).type(userData.userSeccess.password)
-    cy.get(selectorsList.loginButton).click()
-    cy.location('pathname').should('equal', '/web/index.php/dashboard/index')
-    cy.get(selectorsList.dashboardGrid)
+    loginPage.accessLoginPage()
+    loginPage.loginWithUser(userData.userSeccess.username, userData.userSeccess.password)
+    dashboardPage.checkLocation()
     cy.get(selectorsList.myInfoButton).click()
     cy.get(selectorsList.editLocalSection)
     cy.get(selectorsList.firstNameField).clear().type("FirstName Test")
@@ -55,6 +55,12 @@ describe('Orange HRM Tests', () => {
     cy.get(selectorsList.genericField).eq(5).clear().type("12345")
     cy.get(selectorsList.dateField).eq(0).clear().type("2034-01-01")
     cy.get(selectorsList.dateCloseButton).click()
+    
+    cy.get(selectorsList.selectArrow).eq(0).click()
+    cy.get(selectorsList.nationalitySelect).click()
+    cy.get(selectorsList.selectArrow).eq(1).click()
+    cy.get(selectorsList.matiralSelect).click()
+
     cy.get(selectorsList.saveButton).eq(0).click()
     cy.get(selectorsList.successConfirmCloseButton)
     cy.get(selectorsList.successConfirmButton)
