@@ -26,15 +26,15 @@ class MyInfoPage {
         cy.get(this.selectorsList().middleNameField).clear().type(middleName)
         cy.get(this.selectorsList().lastNameField).clear().type(lastName)
      }
-     changingId(){
-        cy.get(this.selectorsList().genericField).eq(3).clear().type("123456789")
-        cy.get(this.selectorsList().genericField).eq(4).clear().type("1234567")
+     changingId(id1, id2){
+        cy.get(this.selectorsList().genericField).eq(3).clear().type(id1)
+        cy.get(this.selectorsList().genericField).eq(4).clear().type(id2)
      }
-     changingDriverLicense(){
-        cy.get(this.selectorsList().genericField).eq(5).clear().type("12345")
+     changingDriverLicense(driverNumber){
+        cy.get(this.selectorsList().genericField).eq(5).clear().type(driverNumber)
      }
-     changingLicenseExpiry(){
-        cy.get(this.selectorsList().dateField).eq(0).clear().type("2034-01-01")
+     changingLicenseExpiry(dateExpiry){
+        cy.get(this.selectorsList().dateField).eq(0).clear().type(dateExpiry)
         cy.get(this.selectorsList().dateCloseButton).click()
      }
      selectNationality(){
@@ -46,7 +46,7 @@ class MyInfoPage {
         cy.get(this.selectorsList().matiralSelect).click()
      }
      savingUpdates(){
-        cy.get(this.selectorsList().saveButton).eq(0).click()
+        cy.get(this.selectorsList().saveButton).eq(0).click({force : true})
      }
      checkingUpdates(){
         cy.get(this.selectorsList().successConfirmCloseButton)
